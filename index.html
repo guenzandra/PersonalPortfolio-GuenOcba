@@ -5,65 +5,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guen Zandra — Full Stack Developer</title>
-
-  <!-- ─── EXTERNAL LIBRARIES ─── -->
-  <!-- AOS: Animate On Scroll - for scroll-triggered reveal animations -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-
-  <!-- Google Fonts: keeping Syne (headings) + Instrument Serif (display italic) + adding DM Sans for body -->
   <link
     href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
     rel="stylesheet" />
 
   <style>
-    /* ══════════════════════════════════════
-       THEME VARIABLES
-       All colors, spacing, and type sizes
-       are defined here so changing the theme
-       is just swapping these values.
-    ══════════════════════════════════════ */
     :root {
       /* Backgrounds — layered dark from darkest to lightest */
       --bg: #0c0b0b;
-      /* main canvas — near-black with a warm undertone */
       --bg2: #111010;
-      /* slightly lighter for section alternation */
       --bg3: #181616;
-      /* card backgrounds */
       --surface: #1e1b1b;
-      /* elevated surfaces */
       --surface2: #252121;
-      /* hover states / deeper surfaces */
-
-      /* Borders */
       --border: rgba(255, 255, 255, 0.06);
       --border2: rgba(255, 255, 255, 0.10);
 
-      /* Text */
       --text: #f5f0ee;
-      /* off-white main text */
       --text2: #a89e9e;
-      /* muted secondary text */
       --text3: #5e5555;
-      /* very muted / labels */
 
-      /* Brand palette — based on her fave colors */
       --pink: #e8829a;
-      /* rose-pink — primary accent */
       --pink2: #f2a8b8;
-      /* lighter blush for hover states */
       --pink3: #fcd5de;
-      /* very light blush for subtle tints */
       --maroon: #7a1e2e;
-      /* deep maroon */
       --crimson: #b8293c;
-      /* mid red for accents */
       --gold: #c9a84c;
-      /* warm gold */
       --gold2: #e2c47a;
-      /* lighter gold */
 
-      /* Glow effects */
       --glow-pink: rgba(232, 130, 154, 0.18);
       --glow-maroon: rgba(122, 30, 46, 0.25);
       --glow-gold: rgba(201, 168, 76, 0.15);
@@ -92,9 +61,6 @@
       --glow-gold: rgba(160, 120, 40, 0.10);
     }
 
-    /* ══════════════════════════════════════
-       RESET & BASE STYLES
-    ══════════════════════════════════════ */
     *,
     *::before,
     *::after {
@@ -113,16 +79,13 @@
       color: var(--text);
       overflow-x: hidden;
       transition: background 0.4s ease, color 0.4s ease;
-      /* Subtle warm noise texture overlay using pseudo-element below */
     }
 
-    /* Text selection color */
     ::selection {
       background: var(--pink);
       color: #fff;
     }
 
-    /* Custom scrollbar — thin and branded */
     ::-webkit-scrollbar {
       width: 2px;
     }
@@ -136,34 +99,22 @@
       border-radius: 99px;
     }
 
-    /* ── Warm noise texture on top of everything ── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      /* SVG turbulence filter rendered as a data URI */
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
       opacity: 0.55;
       mix-blend-mode: overlay;
     }
-
-    /* ══════════════════════════════════════
-       TYPOGRAPHY HELPERS
-    ══════════════════════════════════════ */
     .font-display {
       font-family: 'Instrument Serif', serif;
     }
-
     .font-heading {
       font-family: 'Syne', sans-serif;
     }
-
-    /* ══════════════════════════════════════
-       PAGE LOADER
-       Fades out after assets are ready.
-    ══════════════════════════════════════ */
     #page-loader {
       position: fixed;
       inset: 0;
@@ -176,13 +127,10 @@
       gap: 1.75rem;
       transition: opacity 0.8s ease 0.2s, visibility 0.8s ease 0.2s;
     }
-
     #page-loader.hidden {
       opacity: 0;
       visibility: hidden;
     }
-
-    /* Monogram in loader */
     .loader-mono {
       font-family: 'Instrument Serif', serif;
       font-style: italic;
@@ -191,7 +139,6 @@
       letter-spacing: -0.02em;
       line-height: 1;
     }
-
     .loader-name {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
@@ -200,33 +147,23 @@
       text-transform: uppercase;
       color: var(--text3);
     }
-
-    /* Loading bar */
     .loader-bar-wrap {
       width: 160px;
       height: 1px;
       background: var(--surface2);
       overflow: hidden;
     }
-
     .loader-bar {
       height: 100%;
       background: linear-gradient(90deg, var(--maroon), var(--pink), var(--gold));
       animation: loaderFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
       width: 0;
     }
-
     @keyframes loaderFill {
       to {
         width: 100%;
       }
     }
-
-    /* ══════════════════════════════════════
-       NAVBAR
-       Fixed top bar, becomes translucent
-       with blur when user scrolls down.
-    ══════════════════════════════════════ */
     #navbar {
       position: fixed;
       top: 0;
@@ -240,8 +177,6 @@
       transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
       border-bottom: 1px solid transparent;
     }
-
-    /* Scrolled state — frosted glass effect */
     #navbar.scrolled {
       background: rgba(12, 11, 11, 0.85);
       backdrop-filter: blur(24px);
@@ -252,8 +187,6 @@
     [data-theme="light"] #navbar.scrolled {
       background: rgba(250, 248, 247, 0.88);
     }
-
-    /* Logo: "GZ." — just initials, typographic */
     .nav-logo {
       font-family: 'Instrument Serif', serif;
       font-style: italic;
@@ -276,8 +209,6 @@
       line-height: 1;
       margin-left: 0.05em;
     }
-
-    /* Nav links */
     .nav-links {
       display: flex;
       gap: 2.25rem;
@@ -296,8 +227,6 @@
       transition: color 0.25s;
       position: relative;
     }
-
-    /* Underline animation on hover */
     .nav-links a::after {
       content: '';
       position: absolute;
@@ -323,7 +252,6 @@
       gap: 0.65rem;
     }
 
-    /* Small icon buttons for GitHub/LinkedIn in navbar */
     .nav-icon-btn {
       width: 34px;
       height: 34px;
@@ -344,7 +272,6 @@
       color: var(--pink);
     }
 
-    /* Theme toggle button */
     .theme-toggle {
       width: 34px;
       height: 34px;
@@ -364,7 +291,6 @@
       color: var(--gold);
     }
 
-    /* Primary CTA button in nav */
     .nav-cta {
       padding: 0.5rem 1.2rem;
       background: var(--pink);
@@ -388,9 +314,6 @@
       transform: translateY(-1px);
     }
 
-    /* ══════════════════════════════════════
-       SHARED ANIMATIONS
-    ══════════════════════════════════════ */
     @keyframes fadeUp {
       from {
         opacity: 0;
@@ -413,11 +336,6 @@
       }
     }
 
-    /* ══════════════════════════════════════
-       HERO SECTION
-       Full-viewport, name-first layout.
-       Asymmetric: large type left, image right.
-    ══════════════════════════════════════ */
     #hero {
       min-height: 100vh;
       display: flex;
@@ -427,20 +345,17 @@
       overflow: hidden;
     }
 
-    /* Radial gradient atmosphere behind hero content */
     .hero-bg-glow {
       position: absolute;
       inset: 0;
       pointer-events: none;
       z-index: 0;
-      /* Soft maroon bloom top-left, pink bloom right */
       background:
         radial-gradient(ellipse 55% 55% at 20% 30%, rgba(122, 30, 46, 0.22) 0%, transparent 65%),
         radial-gradient(ellipse 40% 50% at 80% 60%, rgba(232, 130, 154, 0.10) 0%, transparent 60%),
         radial-gradient(ellipse 60% 40% at 50% 100%, rgba(201, 168, 76, 0.06) 0%, transparent 60%);
     }
 
-    /* Thin decorative horizontal rule across the hero */
     .hero-rule {
       position: absolute;
       top: 0;
@@ -452,7 +367,6 @@
       z-index: 1;
     }
 
-    /* Two-column hero layout */
     .hero-inner {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
@@ -465,10 +379,8 @@
       z-index: 2;
     }
 
-    /* Left column text */
     .hero-text {}
 
-    /* Small role label above the name */
     .hero-role-label {
       display: inline-flex;
       align-items: center;
