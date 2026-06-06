@@ -1,0 +1,3611 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guen Zandra — Full Stack Developer</title>
+
+  <!-- ─── EXTERNAL LIBRARIES ─── -->
+  <!-- AOS: Animate On Scroll - for scroll-triggered reveal animations -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- Google Fonts: keeping Syne (headings) + Instrument Serif (display italic) + adding DM Sans for body -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════
+       THEME VARIABLES
+       All colors, spacing, and type sizes
+       are defined here so changing the theme
+       is just swapping these values.
+    ══════════════════════════════════════ */
+    :root {
+      /* Backgrounds — layered dark from darkest to lightest */
+      --bg: #0c0b0b;
+      /* main canvas — near-black with a warm undertone */
+      --bg2: #111010;
+      /* slightly lighter for section alternation */
+      --bg3: #181616;
+      /* card backgrounds */
+      --surface: #1e1b1b;
+      /* elevated surfaces */
+      --surface2: #252121;
+      /* hover states / deeper surfaces */
+
+      /* Borders */
+      --border: rgba(255, 255, 255, 0.06);
+      --border2: rgba(255, 255, 255, 0.10);
+
+      /* Text */
+      --text: #f5f0ee;
+      /* off-white main text */
+      --text2: #a89e9e;
+      /* muted secondary text */
+      --text3: #5e5555;
+      /* very muted / labels */
+
+      /* Brand palette — based on her fave colors */
+      --pink: #e8829a;
+      /* rose-pink — primary accent */
+      --pink2: #f2a8b8;
+      /* lighter blush for hover states */
+      --pink3: #fcd5de;
+      /* very light blush for subtle tints */
+      --maroon: #7a1e2e;
+      /* deep maroon */
+      --crimson: #b8293c;
+      /* mid red for accents */
+      --gold: #c9a84c;
+      /* warm gold */
+      --gold2: #e2c47a;
+      /* lighter gold */
+
+      /* Glow effects */
+      --glow-pink: rgba(232, 130, 154, 0.18);
+      --glow-maroon: rgba(122, 30, 46, 0.25);
+      --glow-gold: rgba(201, 168, 76, 0.15);
+    }
+
+    [data-theme="light"] {
+      --bg: #faf8f7;
+      --bg2: #f2eeec;
+      --bg3: #ebe6e4;
+      --surface: #ffffff;
+      --surface2: #f7f3f1;
+      --border: rgba(0, 0, 0, 0.07);
+      --border2: rgba(0, 0, 0, 0.11);
+      --text: #1a1010;
+      --text2: #5a4a4a;
+      --text3: #9a8888;
+      --pink: #c45e78;
+      --pink2: #d97890;
+      --pink3: #f5d0d8;
+      --maroon: #6b1a28;
+      --crimson: #a02232;
+      --gold: #a07828;
+      --gold2: #c49a44;
+      --glow-pink: rgba(196, 94, 120, 0.12);
+      --glow-maroon: rgba(107, 26, 40, 0.15);
+      --glow-gold: rgba(160, 120, 40, 0.10);
+    }
+
+    /* ══════════════════════════════════════
+       RESET & BASE STYLES
+    ══════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+      /* Subtle warm noise texture overlay using pseudo-element below */
+    }
+
+    /* Text selection color */
+    ::selection {
+      background: var(--pink);
+      color: #fff;
+    }
+
+    /* Custom scrollbar — thin and branded */
+    ::-webkit-scrollbar {
+      width: 2px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--pink);
+      border-radius: 99px;
+    }
+
+    /* ── Warm noise texture on top of everything ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      /* SVG turbulence filter rendered as a data URI */
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      opacity: 0.55;
+      mix-blend-mode: overlay;
+    }
+
+    /* ══════════════════════════════════════
+       TYPOGRAPHY HELPERS
+    ══════════════════════════════════════ */
+    .font-display {
+      font-family: 'Instrument Serif', serif;
+    }
+
+    .font-heading {
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* ══════════════════════════════════════
+       PAGE LOADER
+       Fades out after assets are ready.
+    ══════════════════════════════════════ */
+    #page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.75rem;
+      transition: opacity 0.8s ease 0.2s, visibility 0.8s ease 0.2s;
+    }
+
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* Monogram in loader */
+    .loader-mono {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-size: 3.5rem;
+      color: var(--pink);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .loader-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+
+    /* Loading bar */
+    .loader-bar-wrap {
+      width: 160px;
+      height: 1px;
+      background: var(--surface2);
+      overflow: hidden;
+    }
+
+    .loader-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--maroon), var(--pink), var(--gold));
+      animation: loaderFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      width: 0;
+    }
+
+    @keyframes loaderFill {
+      to {
+        width: 100%;
+      }
+    }
+
+    /* ══════════════════════════════════════
+       NAVBAR
+       Fixed top bar, becomes translucent
+       with blur when user scrolls down.
+    ══════════════════════════════════════ */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      padding: 1.1rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+
+    /* Scrolled state — frosted glass effect */
+    #navbar.scrolled {
+      background: rgba(12, 11, 11, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-color: var(--border);
+    }
+
+    [data-theme="light"] #navbar.scrolled {
+      background: rgba(250, 248, 247, 0.88);
+    }
+
+    /* Logo: "GZ." — just initials, typographic */
+    .nav-logo {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-size: 1.55rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 0.05em;
+    }
+
+    .nav-logo-dot {
+      color: var(--pink);
+      font-style: normal;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-left: 0.05em;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      gap: 2.25rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      text-decoration: none;
+      transition: color 0.25s;
+      position: relative;
+    }
+
+    /* Underline animation on hover */
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--pink);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    /* Small icon buttons for GitHub/LinkedIn in navbar */
+    .nav-icon-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-icon-btn:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Primary CTA button in nav */
+    .nav-cta {
+      padding: 0.5rem 1.2rem;
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-cta:hover {
+      background: var(--pink2);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ══════════════════════════════════════
+       SHARED ANIMATIONS
+    ══════════════════════════════════════ */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ══════════════════════════════════════
+       HERO SECTION
+       Full-viewport, name-first layout.
+       Asymmetric: large type left, image right.
+    ══════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 7rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Radial gradient atmosphere behind hero content */
+    .hero-bg-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      /* Soft maroon bloom top-left, pink bloom right */
+      background:
+        radial-gradient(ellipse 55% 55% at 20% 30%, rgba(122, 30, 46, 0.22) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 80% 60%, rgba(232, 130, 154, 0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(201, 168, 76, 0.06) 0%, transparent 60%);
+    }
+
+    /* Thin decorative horizontal rule across the hero */
+    .hero-rule {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--maroon), var(--pink), transparent);
+      opacity: 0.5;
+      z-index: 1;
+    }
+
+    /* Two-column hero layout */
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Left column text */
+    .hero-text {}
+
+    /* Small role label above the name */
+    .hero-role-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s both;
+    }
+
+    /* Short horizontal rule before the label */
+    .hero-role-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--pink);
+    }
+
+    /* BIG name — the hero statement */
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3.5rem, 7.5vw, 8rem);
+      line-height: 0.92;
+      letter-spacing: -0.05em;
+      color: var(--text);
+      margin-bottom: 0.15em;
+      animation: fadeUp 0.7s 0.25s both;
+    }
+
+    /* "Guen Zandra" in italic serif — feminine, editorial contrast */
+    .hero-name-italic {
+      display: block;
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(3rem, 7vw, 7.2rem);
+      /* Gradient: maroon → pink → gold */
+      background: linear-gradient(110deg, var(--crimson) 0%, var(--pink) 50%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.03em;
+    }
+
+    /* Tagline below the name */
+    .hero-tagline {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text2);
+      max-width: 440px;
+      margin: 1.75rem 0 2.25rem;
+      animation: fadeUp 0.7s 0.45s both;
+    }
+
+    .hero-tagline strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* CTA button row */
+    .hero-btns {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s 0.6s both;
+    }
+
+    /* Stats row */
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 0.7s 0.75s both;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.4rem;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text3);
+      margin-top: 0.3rem;
+    }
+
+    /* Right column — photo */
+    .hero-img-col {
+      display: flex;
+      justify-content: flex-end;
+      position: relative;
+    }
+
+    .hero-img-wrap {
+      position: relative;
+      width: 360px;
+      max-width: 100%;
+      animation: fadeUp 0.9s 0.15s both;
+    }
+
+    /* The photo frame */
+    .hero-img-frame {
+      position: relative;
+      border-radius: 4px 4px 120px 4px;
+      /* asymmetric corners for character */
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+
+    /* Gradient overlay fading to dark at bottom */
+    .hero-img-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(12, 11, 11, 0.65) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-img-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.6s ease;
+      display: block;
+    }
+
+    .hero-img-frame:hover img {
+      transform: scale(1.04);
+    }
+
+    /* Decorative vertical rule beside the image */
+    .hero-img-rule {
+      position: absolute;
+      top: 10%;
+      bottom: 10%;
+      left: -24px;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--maroon), transparent);
+      pointer-events: none;
+    }
+
+    /* Gold corner accent on the image frame */
+    .hero-img-corner {
+      position: absolute;
+      bottom: -10px;
+      left: -10px;
+      width: 50px;
+      height: 50px;
+      border-left: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Scroll cue at bottom of hero */
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 2;
+      animation: fadeIn 1s 1.5s both;
+    }
+
+    .scroll-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--pink), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: scaleY(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scaleY(1.1);
+      }
+    }
+
+    /* ══════════════════════════════════════
+       SHARED SECTION STYLES
+    ══════════════════════════════════════ */
+    section {
+      padding: 7rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Section eyebrow: "Who I Am", "What I Know", etc. */
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow-dash {
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--pink);
+    }
+
+    /* Large section heading */
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+
+    /* Italic serif accent word in section titles */
+    .section-title .serif-accent {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--pink);
+    }
+
+    .section-sub {
+      font-size: 0.95rem;
+      color: var(--text2);
+      max-width: 480px;
+      line-height: 1.75;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Large decorative section number — right side, very faded */
+    .section-number {
+      position: absolute;
+      right: 3.5rem;
+      top: 3.5rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 9rem;
+      letter-spacing: -0.06em;
+      color: rgba(255, 255, 255, 0.025);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    [data-theme="light"] .section-number {
+      color: rgba(0, 0, 0, 0.04);
+    }
+
+    /* Horizontal divider between sections */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+      margin: 0 4rem;
+    }
+
+    /* ══════════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════════ */
+
+    /* Primary — filled pink */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--pink2);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px var(--glow-pink);
+    }
+
+    /* Secondary — outlined */
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    /* Small variant of secondary */
+    .btn-sm {
+      padding: 0.5rem 1.1rem;
+      font-size: 0.68rem;
+    }
+
+    /* ══════════════════════════════════════
+       ABOUT SECTION
+    ══════════════════════════════════════ */
+    #about {
+      background: var(--bg2);
+    }
+
+    /* Subtle bloom accent */
+    #about::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(122, 30, 46, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* 2-col layout for about cards */
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Individual about card */
+    .about-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2.25rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .about-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-3px);
+    }
+
+    /* Card that spans both columns */
+    .about-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* Small icon box above card title */
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-icon.pink-icon {
+      background: rgba(232, 130, 154, 0.1);
+      color: var(--pink);
+    }
+
+    .card-icon.gold-icon {
+      background: rgba(201, 168, 76, 0.1);
+      color: var(--gold);
+    }
+
+    .card-icon.maroon-icon {
+      background: rgba(122, 30, 46, 0.2);
+      color: var(--crimson);
+    }
+
+    .about-card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    /* Personal info: 2-col data grid */
+    .personal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+    }
+
+    .pi-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text3);
+      margin-bottom: 0.18rem;
+    }
+
+    .pi-value {
+      font-size: 0.88rem;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    /* Interests tags */
+    .interests-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .interest-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--text2);
+      background: var(--surface);
+      padding: 0.3rem 0.75rem;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+    }
+
+    /* Education card special */
+    .edu-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .edu-degree {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .edu-spec {
+      font-size: 0.78rem;
+      color: var(--pink);
+      margin-bottom: 0.15rem;
+    }
+
+    .edu-school {
+      font-size: 0.78rem;
+      color: var(--text2);
+    }
+
+    .edu-year {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      color: var(--text3);
+      margin-top: 0.35rem;
+    }
+
+    /* Experience timeline */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 0;
+      width: 1px;
+      background: var(--border2);
+    }
+
+    .timeline-item {
+      padding-left: 1.75rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    /* Timeline dot */
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 8px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--maroon);
+      border: 2px solid var(--bg2);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .timeline-item:hover::before {
+      background: var(--pink);
+      transform: scale(1.3);
+    }
+
+    .tl-role {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .tl-company {
+      font-size: 0.78rem;
+      color: var(--pink);
+      margin: 0.12rem 0;
+    }
+
+    .tl-period {
+      font-size: 0.72rem;
+      color: var(--text3);
+    }
+
+    .tl-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.68rem;
+      color: var(--text3);
+      text-decoration: none;
+      margin-top: 0.25rem;
+      transition: color 0.2s;
+    }
+
+    .tl-link:hover {
+      color: var(--pink);
+    }
+
+    /* 3-col experience grid inside full-width card */
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    /* ══════════════════════════════════════
+       SKILLS SECTION
+    ══════════════════════════════════════ */
+    #skills {
+      background: var(--bg);
+    }
+
+    #skills::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 500px;
+      height: 250px;
+      background: radial-gradient(ellipse, rgba(201, 168, 76, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Tab buttons */
+    .skills-tabs {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .skill-tab {
+      padding: 0.48rem 1.1rem;
+      border-radius: 5px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text3);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .skill-tab.active,
+    .skill-tab:hover {
+      background: rgba(232, 130, 154, 0.08);
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    /* Tab panels */
+    .skills-panel {
+      display: none;
+    }
+
+    .skills-panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Grid of tech items */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tech-item {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.4rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.65rem;
+      transition: border-color 0.25s, transform 0.25s;
+      cursor: default;
+    }
+
+    .tech-item:hover {
+      border-color: rgba(232, 130, 154, 0.3);
+      transform: translateY(-4px);
+    }
+
+    /* Logo container for tech icons — 40x40, image inside */
+    .tech-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      /* INSTRUCTIONS: Replace the background-color below with the brand color,
+         and place your <img> tag inside .tech-logo pointing to the logo file.
+         e.g. <img src="assets/img/logos/php.png" alt="PHP" /> */
+    }
+
+    .tech-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .tech-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.74rem;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .tech-type {
+      font-size: 0.6rem;
+      color: var(--text3);
+      text-align: center;
+    }
+
+    /* ══════════════════════════════════════
+       PROJECTS SECTION
+    ══════════════════════════════════════ */
+    #projects {
+      background: var(--bg2);
+    }
+
+    #projects::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(232, 130, 154, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Filter buttons */
+    .filter-bar {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1.05rem;
+      border-radius: 5px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: rgba(232, 130, 154, 0.08);
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    /* 3-col project grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .project-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(232, 130, 154, 0.25);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-img-wrap {
+      position: relative;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+    }
+
+    .project-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .project-card:hover .project-img-wrap img {
+      transform: scale(1.06);
+    }
+
+    /* Hover overlay with "View Live" link */
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 11, 11, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .project-card:hover .project-overlay {
+      opacity: 1;
+    }
+
+    .overlay-link {
+      padding: 0.55rem 1.35rem;
+      border-radius: 6px;
+      border: 1px solid rgba(245, 240, 238, 0.3);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(232, 130, 154, 0.15);
+      backdrop-filter: blur(8px);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .overlay-link:hover {
+      background: rgba(232, 130, 154, 0.3);
+      border-color: var(--pink);
+      color: #fff;
+    }
+
+    .project-body {
+      padding: 1.4rem;
+    }
+
+    .project-cat {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 0.35rem;
+    }
+
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.83rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    /* Tech tag chips on project cards */
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .tech-tag {
+      font-size: 0.65rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 4px;
+      background: rgba(232, 130, 154, 0.06);
+      border: 1px solid rgba(232, 130, 154, 0.12);
+      color: var(--pink);
+    }
+
+    /* ══════════════════════════════════════
+       GITHUB SECTION
+    ══════════════════════════════════════ */
+    #github {
+      background: var(--bg);
+    }
+
+    /* 4 stat cards in a row */
+    .github-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .gh-stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+      text-align: center;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .gh-stat-card:hover {
+      border-color: rgba(232, 130, 154, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .gh-stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.4rem;
+      letter-spacing: -0.04em;
+      /* Pink to gold gradient number */
+      background: linear-gradient(135deg, var(--pink), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gh-stat-label {
+      font-size: 0.68rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.3rem;
+    }
+
+    .github-graph-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      /* ghchart.onrender.com renders a light SVG — invert in dark mode so it reads cleanly */
+      filter: none;
+    }
+    [data-theme="dark"] .github-graph-wrap img {
+      /* Invert the white background to dark, keep green squares visible */
+      filter: invert(1) hue-rotate(180deg) saturate(1.4) brightness(1.1);
+    }
+
+    /* Repo cards */
+    .repos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .repo-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.35rem;
+      transition: border-color 0.25s, transform 0.25s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .repo-card:hover {
+      border-color: rgba(232, 130, 154, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .repo-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--pink);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .repo-desc {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .repo-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
+
+    .repo-lang {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+
+    .lang-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .repo-stars {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+
+    /* ══════════════════════════════════════
+       CERTIFICATES SECTION
+    ══════════════════════════════════════ */
+    #certificates {
+      background: var(--bg2);
+    }
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cert-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .cert-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(201, 168, 76, 0.3);
+    }
+
+    .cert-img-wrap {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .cert-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .cert-card:hover .cert-img-wrap img {
+      transform: scale(1.06);
+    }
+
+    /* Zoom icon overlay on cert hover */
+    .cert-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 11, 11, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .cert-card:hover .cert-overlay {
+      opacity: 1;
+    }
+
+    .cert-body {
+      padding: 0.9rem 1rem;
+    }
+
+    .cert-body h4 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .cert-issuer {
+      font-size: 0.68rem;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .cert-date {
+      font-size: 0.66rem;
+      color: var(--text3);
+      margin-top: 0.1rem;
+    }
+
+    /* ══════════════════════════════════════
+       CONTACT SECTION
+    ══════════════════════════════════════ */
+    #contact {
+      background: var(--bg);
+    }
+
+    #contact::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(122, 30, 46, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Large CTA heading */
+    .contact-cta {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 5.2rem);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .contact-cta .cta-italic {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      background: linear-gradient(110deg, var(--crimson), var(--pink), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* 3-col contact links */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .contact-item {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      text-align: center;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .contact-item:hover {
+      border-color: rgba(232, 130, 154, 0.25);
+      transform: translateY(-3px);
+    }
+
+    .ci-icon {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--pink);
+    }
+
+    .ci-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text3);
+    }
+
+    .ci-value {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .ci-value a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .ci-value a:hover {
+      color: var(--pink);
+    }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 1.4rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text3);
+    }
+
+    footer a {
+      color: var(--text3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--pink);
+    }
+
+    /* ══════════════════════════════════════
+       MODALS
+       Overlay + centered panel system.
+    ══════════════════════════════════════ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-backdrop.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-panel {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      width: 90%;
+      max-width: 660px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      transform: translateY(24px) scale(0.97);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+    }
+
+    .modal-panel-lg {
+      max-width: 880px;
+    }
+
+    .modal-backdrop.show .modal-panel {
+      transform: none;
+      opacity: 1;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text2);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .modal-close:hover {
+      border-color: var(--pink);
+      color: var(--pink);
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1.75rem;
+    }
+
+    /* Certificate image in detail modal */
+    .cert-modal-img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1.4rem;
+      border: 1px solid var(--border);
+    }
+
+    /* ══════════════════════════════════════
+       TOAST NOTIFICATIONS
+       Slide in from bottom-right.
+    ══════════════════════════════════════ */
+    #toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 9000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      min-width: 260px;
+      max-width: 340px;
+      position: relative;
+      transform: translateX(120%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: all;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .toast-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(232, 130, 154, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--pink);
+      flex-shrink: 0;
+    }
+
+    .toast-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    .toast-msg {
+      font-size: 0.74rem;
+      color: var(--text2);
+      margin-top: 0.08rem;
+    }
+
+    /* Progress bar at bottom of toast */
+    .toast-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      border-radius: 0 0 8px 8px;
+      background: linear-gradient(90deg, var(--maroon), var(--pink));
+      animation: toastBar 3.5s linear forwards;
+    }
+
+    @keyframes toastBar {
+      from {
+        width: 100%;
+      }
+
+      to {
+        width: 0%;
+      }
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE BREAKPOINTS
+    ══════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      #hero {
+        padding: 6rem 2.5rem 4rem;
+      }
+
+      section {
+        padding: 5rem 2.5rem;
+      }
+
+      .divider {
+        margin: 0 2.5rem;
+      }
+
+      footer {
+        padding: 1.4rem 2.5rem;
+      }
+
+      #navbar {
+        padding: 1rem 2.5rem;
+      }
+
+      .cert-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .github-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .repos-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2.5rem;
+      }
+
+      .hero-role-label {
+        justify-content: center;
+      }
+
+      .hero-btns {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-img-col {
+        justify-content: center;
+        order: -1;
+      }
+
+      .hero-img-wrap {
+        width: 240px;
+      }
+
+      #navbar {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .about-card.full-width {
+        grid-column: 1;
+      }
+
+      .exp-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .repos-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .github-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .divider {
+        margin: 0 1.5rem;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1.4rem;
+        text-align: center;
+      }
+
+      .personal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cert-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-name {
+        font-size: 2.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════
+       PAGE LOADER
+       Shows while page assets are loading.
+  ══════════════════════════════════════ -->
+  <div id="page-loader">
+    <div class="loader-mono">GZ</div>
+    <div class="loader-name">Guen Zandra</div>
+    <div class="loader-bar-wrap">
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+
+  <!-- Toast container: toasts are injected here by JS -->
+  <div id="toast-container"></div>
+
+  <!-- ══════════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════════ -->
+  <nav id="navbar">
+    <!-- Logo: italic serif GZ with a pink dot -->
+    <a href="#hero" class="nav-logo">
+      GZ<span class="nav-logo-dot">.</span>
+    </a>
+
+    <!-- Desktop navigation links -->
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#github">GitHub</a></li>
+      <li><a href="#certificates">Certs</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <!-- GitHub icon link -->
+      <a href="https://github.com/guenzandra" target="_blank" rel="noopener" class="nav-icon-btn" title="GitHub">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+        </svg>
+      </a>
+
+      <!-- LinkedIn icon link -->
+      <a href="https://www.linkedin.com/in/guenzandra-dev/" target="_blank" rel="noopener" class="nav-icon-btn"
+        title="LinkedIn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+          <rect x="2" y="9" width="4" height="12" />
+          <circle cx="4" cy="4" r="2" />
+        </svg>
+      </a>
+
+      <!-- Light/dark theme toggle -->
+      <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+        <!-- Sun icon shown in dark mode (click to go light) -->
+        <svg id="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <!-- Moon icon shown in light mode (click to go dark) -->
+        <svg id="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" style="display:none;">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+
+      <a href="#contact" class="nav-cta">Connect</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       HERO SECTION
+  ══════════════════════════════════════ -->
+  <header id="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-rule"></div>
+
+    <div class="hero-inner">
+
+      <!-- Left: text content -->
+      <div class="hero-text">
+
+        <!-- Role label with dash -->
+        <div class="hero-role-label">Full Stack Developer</div>
+
+        <!-- Main name heading — Syne bold for "Full Stack" + italic serif for her name -->
+        <h1 class="hero-name">
+          Full Stack<br>
+          <span class="hero-name-italic">Guen Zandra.</span>
+        </h1>
+
+        <!-- Short bio paragraph -->
+        <p class="hero-tagline">
+          A 23-year-old developer from <strong>Pagsanjan, Laguna</strong> who builds
+          elegant, performant web experiences — from pixel-perfect UIs to robust back-end systems.
+        </p>
+
+        <!-- CTA buttons -->
+        <div class="hero-btns">
+          <a href="assets/docs/resume.pdf" class="btn-primary" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download CV
+          </a>
+          <a href="#projects" class="btn-secondary">
+            View Projects
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Quick stat numbers — count up via JS when visible -->
+        <div class="hero-stats">
+          <div>
+            <div class="stat-num" id="stat-exp">0+</div>
+            <div class="stat-label">Years Exp.</div>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-projects">0+</div>
+            <div class="stat-label">Projects</div>
+          </div>
+          <div>
+            <div class="stat-num" id="stat-certs">0+</div>
+            <div class="stat-label">Certificates</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: photo -->
+      <div class="hero-img-col">
+        <div class="hero-img-wrap">
+          <!-- Vertical decorative rule left of photo -->
+          <div class="hero-img-rule"></div>
+
+          <!-- Asymmetric-corner photo frame -->
+          <div class="hero-img-frame">
+            <!--
+              PHOTO: Place your photo at assets/img/guen.jpg
+              The onerror fallback shows a gradient placeholder if the image is missing.
+            -->
+            <img src="assets/img/guen.jpg" alt="Guen Zandra" loading="eager"
+              onerror="this.style.minHeight='420px';this.parentElement.style.background='linear-gradient(135deg,#7a1e2e,#e8829a)'" />
+          </div>
+
+          <!-- Gold corner accent (bottom-left of the frame) -->
+          <div class="hero-img-corner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator at bottom center -->
+    <div class="hero-scroll">
+      <div class="scroll-text">Scroll</div>
+      <div class="scroll-line"></div>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       ABOUT SECTION — 01
+  ══════════════════════════════════════ -->
+  <section id="about">
+    <div class="section-number" aria-hidden="true">01</div>
+
+    <!-- Section header -->
+    <div data-aos="fade-up" style="position:relative;z-index:1;">
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>Who I Am</div>
+      <h2 class="section-title">About <span class="serif-accent">Me</span></h2>
+      <p class="section-sub">A full-stack developer who thrives at the intersection of design and technology.</p>
+    </div>
+
+    <div class="about-layout">
+
+      <!-- Personal Info card -->
+      <div class="about-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="card-icon pink-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <div class="about-card-title">Personal Info</div>
+        <div class="personal-grid">
+          <div>
+            <div class="pi-label">Age</div>
+            <div class="pi-value">23 years old</div>
+          </div>
+          <div>
+            <div class="pi-label">Height</div>
+            <div class="pi-value">5'2"</div>
+          </div>
+          <div>
+            <div class="pi-label">Nationality</div>
+            <div class="pi-value">Filipino</div>
+          </div>
+          <div>
+            <div class="pi-label">Religion</div>
+            <div class="pi-value">Catholic</div>
+          </div>
+          <div>
+            <div class="pi-label">Location</div>
+            <div class="pi-value">Pagsanjan, Laguna</div>
+          </div>
+          <div>
+            <div class="pi-label">Schedule</div>
+            <div class="pi-value">Night Owl</div>
+          </div>
+        </div>
+
+        <!-- Interest tags (SVG icons only, no emojis) -->
+        <div class="interests-wrap">
+          <span class="interest-tag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+            Gaming
+          </span>
+          <span class="interest-tag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            Coding
+          </span>
+          <span class="interest-tag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7" />
+              <rect x="1" y="5" width="15" height="14" rx="2" />
+            </svg>
+            Streaming
+          </span>
+          <span class="interest-tag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z" />
+            </svg>
+            Plants
+          </span>
+          <span class="interest-tag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            Cats
+          </span>
+        </div>
+      </div>
+
+      <!-- Education card -->
+      <div class="about-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-icon gold-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
+        </div>
+        <div class="about-card-title">Education</div>
+        <div class="edu-block">
+          <div class="edu-degree">BS Information Technology</div>
+          <div class="edu-spec">Specialization: Business Analytics</div>
+          <div class="edu-school">Laguna University, Sta. Cruz, Laguna</div>
+          <div class="edu-year">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            2021 — 2026
+          </div>
+        </div>
+        <!--
+          NOTE: Proficiency overview bars were removed per request.
+          This space is left intentionally open — you can add awards,
+          GWA, or relevant coursework here if desired.
+        -->
+      </div>
+
+      <!-- Experience card — full width, 3-col timeline grid -->
+      <div class="about-card full-width" data-aos="fade-up" data-aos-delay="200">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <div>
+            <div class="card-icon maroon-icon" style="margin-bottom:0.75rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            </div>
+            <div class="about-card-title">Work Experience</div>
+          </div>
+          <!-- Button opens the full experience modal -->
+          <button class="btn-secondary btn-sm" onclick="openModal('modal-exp')">
+            View All
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- 3-col grid of recent roles (no timeline ::before here — different layout) -->
+        <div class="exp-grid">
+          <div class="timeline-item">
+            <div class="tl-role">Junior Full Stack Developer</div>
+            <div class="tl-company">YUKTA App</div>
+            <div class="tl-period">Jan 2026 – Apr 2026</div>
+            <a href="https://www.yukta.app/" target="_blank" rel="noopener" class="tl-link">
+              yukta.app
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+          <div class="timeline-item">
+            <div class="tl-role">Web Developer</div>
+            <div class="tl-company">Provide Impact</div>
+            <div class="tl-period">2025</div>
+            <a href="https://www.provideimpact.com/" target="_blank" rel="noopener" class="tl-link">
+              provideimpact.com
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+          <div class="timeline-item">
+            <div class="tl-role">Content Manager & Video Editor</div>
+            <div class="tl-company">Burgt Media</div>
+            <div class="tl-period">2024 – 2026</div>
+            <a href="https://www.burgtmedia.com/" target="_blank" rel="noopener" class="tl-link">
+              burgtmedia.com
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       SKILLS SECTION — 02
+  ══════════════════════════════════════ -->
+  <section id="skills">
+    <div class="section-number" aria-hidden="true">02</div>
+
+    <div data-aos="fade-up" style="position:relative;z-index:1;">
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>What I Know</div>
+      <h2 class="section-title">Tech <span class="serif-accent">Stack</span></h2>
+      <p class="section-sub">A toolkit built over years of building real products.</p>
+    </div>
+
+    <!-- Tab switcher: Languages / Frameworks / Databases / Tools / Creative -->
+    <div class="skills-tabs" id="skills-tabs">
+      <button class="skill-tab active" data-tab="languages">Languages</button>
+      <button class="skill-tab" data-tab="frameworks">Frameworks</button>
+      <button class="skill-tab" data-tab="databases">Databases</button>
+      <button class="skill-tab" data-tab="tools">Tools & DevOps</button>
+      <button class="skill-tab" data-tab="creative">Creative</button>
+    </div>
+
+    <!-- ── Languages panel ── -->
+    <!--
+      HOW TO ADD TECH LOGOS:
+      Each .tech-logo div is a 40x40 image placeholder.
+      Replace the background-color with the brand color, then add:
+        <img src="assets/img/logos/php.png" alt="PHP" />
+      inside the .tech-logo div. The image should be square (PNG with transparency works best).
+    -->
+    <div class="skills-panel active" id="panel-languages" data-aos="fade-up">
+      <div class="tech-grid">
+        <div class="tech-item">
+          <!-- PHP: brand color #4F5D95 — place logo at assets/img/logos/php.png -->
+          <div class="tech-logo" style="background:#4F5D95;">
+            <img src="assets/img/logos/php.png" alt="PHP"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'11\' font-weight=\'bold\'>PHP</text></svg>'" />
+          </div>
+          <div class="tech-name">PHP</div>
+          <div class="tech-type">Server-side</div>
+        </div>
+        <div class="tech-item">
+          <!-- JavaScript: brand color #F7DF1E -->
+          <div class="tech-logo" style="background:#F7DF1E;">
+            <img src="assets/img/logos/javascript.png" alt="JavaScript"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'#333\'><text y=\'18\' font-size=\'12\' font-weight=\'bold\'>JS</text></svg>'" />
+          </div>
+          <div class="tech-name">JavaScript</div>
+          <div class="tech-type">Client & Server</div>
+        </div>
+        <div class="tech-item">
+          <!-- Python: brand color #3776AB -->
+          <div class="tech-logo" style="background:#3776AB;">
+            <img src="assets/img/logos/python.png" alt="Python"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'11\' font-weight=\'bold\'>Py</text></svg>'" />
+          </div>
+          <div class="tech-name">Python</div>
+          <div class="tech-type">Scripting</div>
+        </div>
+        <div class="tech-item">
+          <!-- HTML5: brand color #E34F26 -->
+          <div class="tech-logo" style="background:#E34F26;">
+            <img src="assets/img/logos/html5.png" alt="HTML5"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>HTML</text></svg>'" />
+          </div>
+          <div class="tech-name">HTML5</div>
+          <div class="tech-type">Markup</div>
+        </div>
+        <div class="tech-item">
+          <!-- CSS3: brand color #1572B6 -->
+          <div class="tech-logo" style="background:#1572B6;">
+            <img src="assets/img/logos/css3.png" alt="CSS3"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'11\' font-weight=\'bold\'>CSS</text></svg>'" />
+          </div>
+          <div class="tech-name">CSS3</div>
+          <div class="tech-type">Styling</div>
+        </div>
+        <div class="tech-item">
+          <!-- TypeScript: brand color #3178C6 -->
+          <div class="tech-logo" style="background:#3178C6;">
+            <img src="assets/img/logos/typescript.png" alt="TypeScript"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'11\' font-weight=\'bold\'>TS</text></svg>'" />
+          </div>
+          <div class="tech-name">TypeScript</div>
+          <div class="tech-type">Typed JS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Frameworks panel ── -->
+    <div class="skills-panel" id="panel-frameworks" data-aos="fade-up">
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#FF2D20;">
+            <img src="assets/img/logos/laravel.png" alt="Laravel"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>L</text></svg>'" />
+          </div>
+          <div class="tech-name">Laravel</div>
+          <div class="tech-type">PHP Framework</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#20232a;">
+            <img src="assets/img/logos/react.png" alt="React"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'#61DAFB\'><circle cx=\'12\' cy=\'12\' r=\'3\'/></svg>'" />
+          </div>
+          <div class="tech-name">React</div>
+          <div class="tech-type">UI Library</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#339933;">
+            <img src="assets/img/logos/nodejs.png" alt="Node.js"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>N</text></svg>'" />
+          </div>
+          <div class="tech-name">Node.js</div>
+          <div class="tech-type">Runtime</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#000;border:1px solid #333;">
+            <img src="assets/img/logos/nextjs.png" alt="Next.js"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'7\' font-weight=\'bold\'>Next</text></svg>'" />
+          </div>
+          <div class="tech-name">Next.js</div>
+          <div class="tech-type">React Framework</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#06B6D4;">
+            <img src="assets/img/logos/tailwind.png" alt="Tailwind"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'8\' font-weight=\'bold\'>TW</text></svg>'" />
+          </div>
+          <div class="tech-name">Tailwind</div>
+          <div class="tech-type">CSS Framework</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#7952B3;">
+            <img src="assets/img/logos/bootstrap.png" alt="Bootstrap"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'7\' font-weight=\'bold\'>BST</text></svg>'" />
+          </div>
+          <div class="tech-name">Bootstrap</div>
+          <div class="tech-type">UI Framework</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Databases panel ── -->
+    <div class="skills-panel" id="panel-databases" data-aos="fade-up">
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#4479A1;">
+            <img src="assets/img/logos/mysql.png" alt="MySQL"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'6\' font-weight=\'bold\'>MySQL</text></svg>'" />
+          </div>
+          <div class="tech-name">MySQL</div>
+          <div class="tech-type">Relational DB</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#336791;">
+            <img src="assets/img/logos/postgresql.png" alt="PostgreSQL"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'6\' font-weight=\'bold\'>PgSQL</text></svg>'" />
+          </div>
+          <div class="tech-name">PostgreSQL</div>
+          <div class="tech-type">Relational DB</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#003B57;">
+            <img src="assets/img/logos/sqlite.png" alt="SQLite"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'6\' font-weight=\'bold\'>SQLite</text></svg>'" />
+          </div>
+          <div class="tech-name">SQLite</div>
+          <div class="tech-type">Embedded DB</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#3ECF8E;">
+            <img src="assets/img/logos/supabase.png" alt="Supabase"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'6\' font-weight=\'bold\'>Supa</text></svg>'" />
+          </div>
+          <div class="tech-name">Supabase</div>
+          <div class="tech-type">BaaS</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#FFCA28;">
+            <img src="assets/img/logos/firebase.png" alt="Firebase"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'#333\'><text y=\'18\' font-size=\'6\' font-weight=\'bold\'>Fire</text></svg>'" />
+          </div>
+          <div class="tech-name">Firebase</div>
+          <div class="tech-type">NoSQL / BaaS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Tools panel ── -->
+    <div class="skills-panel" id="panel-tools" data-aos="fade-up">
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#F05032;">
+            <img src="assets/img/logos/git.png" alt="Git"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>git</text></svg>'" />
+          </div>
+          <div class="tech-name">Git</div>
+          <div class="tech-type">Version Control</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#181717;border:1px solid #333;">
+            <img src="assets/img/logos/github.png" alt="GitHub"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'7\' font-weight=\'bold\'>GH</text></svg>'" />
+          </div>
+          <div class="tech-name">GitHub</div>
+          <div class="tech-type">Hosting</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#2496ED;">
+            <img src="assets/img/logos/docker.png" alt="Docker"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'6\' font-weight=\'bold\'>Docker</text></svg>'" />
+          </div>
+          <div class="tech-name">Docker</div>
+          <div class="tech-type">Containers</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#000;border:1px solid #333;">
+            <img src="assets/img/logos/vercel.png" alt="Vercel"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'6\' font-weight=\'bold\'>Vercel</text></svg>'" />
+          </div>
+          <div class="tech-name">Vercel</div>
+          <div class="tech-type">Deployment</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#007ACC;">
+            <img src="assets/img/logos/vscode.png" alt="VS Code"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'8\' font-weight=\'bold\'>VS</text></svg>'" />
+          </div>
+          <div class="tech-name">VS Code</div>
+          <div class="tech-type">IDE</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#4a4a4a;">
+            <!-- Hardware/software troubleshoot — no standard logo, using SVG icon -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+            </svg>
+          </div>
+          <div class="tech-name">Troubleshoot</div>
+          <div class="tech-type">HW & SW</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Creative panel ── -->
+    <div class="skills-panel" id="panel-creative" data-aos="fade-up">
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#9999FF;">
+            <img src="assets/img/logos/premiere.png" alt="Premiere Pro"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>Pr</text></svg>'" />
+          </div>
+          <div class="tech-name">Premiere Pro</div>
+          <div class="tech-type">Video Editing</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#001E36;">
+            <img src="assets/img/logos/photoshop.png" alt="Photoshop"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>Ps</text></svg>'" />
+          </div>
+          <div class="tech-name">Photoshop</div>
+          <div class="tech-type">Photo Edit</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#FF9A00;">
+            <img src="assets/img/logos/illustrator.png" alt="Illustrator"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>Ai</text></svg>'" />
+          </div>
+          <div class="tech-name">Illustrator</div>
+          <div class="tech-type">Vector Design</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#00C4CC;">
+            <img src="assets/img/logos/canva.png" alt="Canva"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'9\' font-weight=\'bold\'>Ca</text></svg>'" />
+          </div>
+          <div class="tech-name">Canva</div>
+          <div class="tech-type">Design</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#000;border:1px solid #333;">
+            <img src="assets/img/logos/capcut.png" alt="CapCut"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'8\' font-weight=\'bold\'>CC</text></svg>'" />
+          </div>
+          <div class="tech-name">CapCut</div>
+          <div class="tech-type">Video Edit</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-logo" style="background:#FF3C7D;">
+            <img src="assets/img/logos/picsart.png" alt="PicsArt"
+              onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' width=\'26\' fill=\'white\'><text y=\'18\' font-size=\'8\' font-weight=\'bold\'>PA</text></svg>'" />
+          </div>
+          <div class="tech-name">PicsArt</div>
+          <div class="tech-type">Mobile Edit</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       PROJECTS SECTION — 03
+  ══════════════════════════════════════ -->
+  <section id="projects">
+    <div class="section-number" aria-hidden="true">03</div>
+
+    <div data-aos="fade-up" style="position:relative;z-index:1;">
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>What I've Built</div>
+      <h2 class="section-title">Featured <span class="serif-accent">Projects</span></h2>
+      <p class="section-sub">A selection of work I'm proud of — from concept to deployment.</p>
+    </div>
+
+    <!-- Category filter buttons -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="web">Web Dev</button>
+      <button class="filter-btn" data-category="mobile">Mobile</button>
+      <button class="filter-btn" data-category="game">Game</button>
+      <button class="filter-btn" data-category="other">Other</button>
+    </div>
+
+    <!-- Project cards grid — JS shows/hides based on active filter -->
+    <div class="projects-grid" id="projects-grid">
+
+      <div class="project-card" data-category="web" data-aos="fade-up" data-aos-delay="0">
+        <div class="project-img-wrap">
+          <img src="assets/img/project1.png" alt="Project 1" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#7a1e2e,#1a0a0d)'" />
+          <div class="project-overlay">
+            <a href="#" class="overlay-link" target="_blank">View Live</a>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-cat">Web Development</div>
+          <div class="project-title">Project Title One</div>
+          <div class="project-desc">A brief description of this project, what it does and why it matters to the end
+            user.</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Laravel</span>
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">MySQL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card" data-category="web" data-aos="fade-up" data-aos-delay="80">
+        <div class="project-img-wrap">
+          <img src="assets/img/project2.png" alt="Project 2" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#c9a84c,#4a3300)'" />
+          <div class="project-overlay">
+            <a href="#" class="overlay-link" target="_blank">View Live</a>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-cat">Web Development</div>
+          <div class="project-title">Project Title Two</div>
+          <div class="project-desc">Highlight key features and the problem this project solves for its users.</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Node.js</span>
+            <span class="tech-tag">Supabase</span>
+            <span class="tech-tag">Tailwind</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card" data-category="mobile" data-aos="fade-up" data-aos-delay="160">
+        <div class="project-img-wrap">
+          <img src="assets/img/project3.png" alt="Project 3" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#e8829a,#3a0a14)'" />
+          <div class="project-overlay">
+            <a href="#" class="overlay-link" target="_blank">View Live</a>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-cat">Mobile App</div>
+          <div class="project-title">Project Title Three</div>
+          <div class="project-desc">A mobile application built with a focus on clean UX and snappy performance.</div>
+          <div class="tech-tags">
+            <span class="tech-tag">React Native</span>
+            <span class="tech-tag">Firebase</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card" data-category="game" data-aos="fade-up" data-aos-delay="240">
+        <div class="project-img-wrap">
+          <img src="assets/img/project4.png" alt="Project 4" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#b8293c,#1a0008)'" />
+          <div class="project-overlay">
+            <a href="#" class="overlay-link" target="_blank">View Live</a>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-cat">Game Development</div>
+          <div class="project-title">Project Title Four</div>
+          <div class="project-desc">An interactive game built with Python and creative logic — polished and fun.</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Pygame</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;position:relative;z-index:1;">
+      <button class="btn-primary" onclick="openModal('modal-projects')">
+        View All Projects
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       GITHUB SECTION — 04
+  ══════════════════════════════════════ -->
+  <section id="github">
+    <div class="section-number" aria-hidden="true">04</div>
+
+    <div data-aos="fade-up" style="position:relative;z-index:1;">
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>Open Source</div>
+      <h2 class="section-title">GitHub <span class="serif-accent">Activity</span></h2>
+      <p class="section-sub">Consistent commits. Real work. Every square tells a story.</p>
+    </div>
+
+    <!-- 4 stat cards: repos / stars / followers / years active -->
+    <div class="github-stats-grid">
+      <div class="gh-stat-card">
+        <div class="gh-stat-num" id="gh-repos">—</div>
+        <div class="gh-stat-label">Repositories</div>
+      </div>
+      <div class="gh-stat-card">
+        <div class="gh-stat-num" id="gh-stars">—</div>
+        <div class="gh-stat-label">Stars Earned</div>
+      </div>
+      <div class="gh-stat-card">
+        <div class="gh-stat-num" id="gh-followers">—</div>
+        <div class="gh-stat-label">Followers</div>
+      </div>
+      <div class="gh-stat-card">
+        <div class="gh-stat-num">2+</div>
+        <div class="gh-stat-label">Years Active</div>
+      </div>
+    </div>
+    
+    <div class="github-graph-wrap">
+      <img src="https://ghchart.rshah.org/guenzandra"
+        alt="GitHub contribution graph for guenzandra (76 contributions in the last year)" loading="lazy" />
+    </div>
+
+    <!-- Repo grid heading -->
+    <div style="position:relative;z-index:1;" data-aos="fade-up">
+      <div
+        style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text);margin:2.5rem 0 1.25rem;display:flex;align-items:center;gap:0.65rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+        </svg>
+        Pinned Repositories
+      </div>
+
+      <!-- Repos are injected here by loadGitHub() -->
+      <div class="repos-grid" id="repos-grid">
+        <div class="repo-card" style="opacity:0.4;">
+          <div class="repo-name">Loading repos...</div>
+          <div class="repo-desc">Fetching from GitHub API...</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:2rem;position:relative;z-index:1;">
+      <a href="https://github.com/guenzandra" target="_blank" rel="noopener" class="btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+        </svg>
+        Visit GitHub Profile
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       CERTIFICATES SECTION — 05
+  ══════════════════════════════════════ -->
+  <section id="certificates">
+    <div class="section-number" aria-hidden="true">05</div>
+
+    <div data-aos="fade-up" style="position:relative;z-index:1;">
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>Recognition</div>
+      <h2 class="section-title">Certifi<span class="serif-accent">cates</span></h2>
+      <p class="section-sub">Proof of continuous learning and professional development.</p>
+    </div>
+
+    <div class="cert-grid">
+
+      <!-- Each cert card calls openCertModal(index) on click -->
+      <div class="cert-card" onclick="openCertModal(0)" data-aos="fade-up" data-aos-delay="0">
+        <div class="cert-img-wrap">
+          <img src="assets/img/cert1.jpg" alt="Certificate 1" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#7a1e2e,#1a0a0d)'" />
+          <div class="cert-overlay">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
+        </div>
+        <div class="cert-body">
+          <h4>Certificate Title One</h4>
+          <div class="cert-issuer">Issuer Name</div>
+          <div class="cert-date">Month Year</div>
+        </div>
+      </div>
+
+      <div class="cert-card" onclick="openCertModal(1)" data-aos="fade-up" data-aos-delay="60">
+        <div class="cert-img-wrap">
+          <img src="assets/img/cert2.jpg" alt="Certificate 2" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#c9a84c,#2a1e00)'" />
+          <div class="cert-overlay">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
+        </div>
+        <div class="cert-body">
+          <h4>Certificate Title Two</h4>
+          <div class="cert-issuer">Issuer Name</div>
+          <div class="cert-date">Month Year</div>
+        </div>
+      </div>
+
+      <div class="cert-card" onclick="openCertModal(2)" data-aos="fade-up" data-aos-delay="120">
+        <div class="cert-img-wrap">
+          <img src="assets/img/cert3.jpg" alt="Certificate 3" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#e8829a,#3a0a14)'" />
+          <div class="cert-overlay">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
+        </div>
+        <div class="cert-body">
+          <h4>Certificate Title Three</h4>
+          <div class="cert-issuer">Issuer Name</div>
+          <div class="cert-date">Month Year</div>
+        </div>
+      </div>
+
+      <div class="cert-card" onclick="openCertModal(3)" data-aos="fade-up" data-aos-delay="180">
+        <div class="cert-img-wrap">
+          <img src="assets/img/cert4.jpg" alt="Certificate 4" loading="lazy"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#b8293c,#0d0005)'" />
+          <div class="cert-overlay">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
+        </div>
+        <div class="cert-body">
+          <h4>Certificate Title Four</h4>
+          <div class="cert-issuer">Issuer Name</div>
+          <div class="cert-date">Month Year</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:2rem;position:relative;z-index:1;">
+      <button class="btn-secondary" onclick="openModal('modal-certs')">
+        View All Certificates
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════
+       CONTACT SECTION
+  ══════════════════════════════════════ -->
+  <section id="contact">
+    <div class="contact-inner">
+
+      <div data-aos="fade-up">
+        <div class="section-eyebrow" style="justify-content:center;">
+          <span class="eyebrow-dash"></span>Get In Touch<span class="eyebrow-dash"></span>
+        </div>
+        <!-- Large italic CTA heading -->
+        <div class="contact-cta">
+          Let's build something<br><span class="cta-italic">great.</span>
+        </div>
+        <p style="color:var(--text2);max-width:420px;margin:0 auto;line-height:1.75;font-size:0.92rem;">
+          Open to interesting projects, collaborations, and conversations. Reach out through any channel below.
+        </p>
+      </div>
+
+      <!-- 3-col contact grid (email, LinkedIn, GitHub, Facebook, Instagram, Location) -->
+      <div class="contact-grid" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="contact-item">
+          <div class="ci-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+          </div>
+          <div class="ci-label">Email</div>
+          <div class="ci-value">
+            <a href="mailto:zandraflores2003@gmail.com">zandraflores2003@gmail.com</a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="ci-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </div>
+          <div class="ci-label">LinkedIn</div>
+          <div class="ci-value">
+            <a href="https://www.linkedin.com/in/guenzandra-dev/" target="_blank" rel="noopener">guenzandra-dev</a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="ci-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+            </svg>
+          </div>
+          <div class="ci-label">GitHub</div>
+          <div class="ci-value">
+            <a href="https://github.com/guenzandra" target="_blank" rel="noopener">guenzandra</a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="ci-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+          </div>
+          <div class="ci-label">Facebook</div>
+          <div class="ci-value"><a href="#" target="_blank">Guen Zandra</a></div>
+        </div>
+
+        <div class="contact-item">
+          <div class="ci-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </svg>
+          </div>
+          <div class="ci-label">Instagram</div>
+          <div class="ci-value"><a href="#" target="_blank">@guenzandra</a></div>
+        </div>
+
+        <div class="contact-item">
+          <div class="ci-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+          </div>
+          <div class="ci-label">Location</div>
+          <div class="ci-value" style="color:var(--text);">Pagsanjan, Laguna, PH</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer>
+    <span>© 2026 Guen Zandra. Crafted with care.</span>
+    <div style="display:flex;align-items:center;gap:1.25rem;">
+      <a href="https://github.com/guenzandra" target="_blank" rel="noopener">github.com/guenzandra</a>
+      <a href="#hero" style="display:flex;align-items:center;gap:0.4rem;color:var(--pink);">
+        Back to top
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="19" x2="12" y2="5" />
+          <polyline points="5 12 12 5 19 12" />
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════
+       MODALS
+  ══════════════════════════════════════ -->
+
+  <!-- Experience detail modal -->
+  <div class="modal-backdrop" id="modal-exp" onclick="closeModalOutside(event,'modal-exp')">
+    <div class="modal-panel">
+      <button class="modal-close" onclick="closeModal('modal-exp')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>Career</div>
+      <div class="modal-title">All Work Experience</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="tl-role">Junior Full Stack Developer</div>
+          <div class="tl-company">YUKTA App</div>
+          <div class="tl-period">Jan 2026 – Apr 2026</div>
+          <a href="https://www.yukta.app/" target="_blank" rel="noopener" class="tl-link">yukta.app</a>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-role">Web Developer</div>
+          <div class="tl-company">Provide Impact</div>
+          <div class="tl-period">2025</div>
+          <a href="https://www.provideimpact.com/" target="_blank" rel="noopener" class="tl-link">provideimpact.com</a>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-role">Content Manager & Video Editor</div>
+          <div class="tl-company">Burgt Media</div>
+          <div class="tl-period">2024 – 2026</div>
+          <a href="https://www.burgtmedia.com/" target="_blank" rel="noopener" class="tl-link">burgtmedia.com</a>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-role">Video Editor</div>
+          <div class="tl-company">Noire Media</div>
+          <div class="tl-period">2025 – 2026</div>
+          <a href="https://www.noirmediallc.com/" target="_blank" rel="noopener" class="tl-link">noirmediallc.com</a>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-role">Virtual Assistant</div>
+          <div class="tl-company">Provide Impact</div>
+          <div class="tl-period">Nov 2024 – Dec 2024</div>
+          <a href="https://www.provideimpact.com/" target="_blank" rel="noopener" class="tl-link">provideimpact.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All projects modal -->
+  <div class="modal-backdrop" id="modal-projects" onclick="closeModalOutside(event,'modal-projects')">
+    <div class="modal-panel modal-panel-lg">
+      <button class="modal-close" onclick="closeModal('modal-projects')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>Portfolio</div>
+      <div class="modal-title">All Projects</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;">
+        <div class="project-card">
+          <div class="project-body" style="padding:1.5rem;">
+            <div class="project-cat">Web Development</div>
+            <div class="project-title">Project Title One</div>
+            <div class="project-desc">Extended description — challenges faced, your role, outcomes achieved.</div>
+            <div class="tech-tags" style="margin-bottom:1rem;">
+              <span class="tech-tag">Laravel</span>
+              <span class="tech-tag">React</span>
+              <span class="tech-tag">MySQL</span>
+            </div>
+            <a href="#" class="btn-secondary btn-sm" target="_blank">View Live</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-body" style="padding:1.5rem;">
+            <div class="project-cat">Mobile App</div>
+            <div class="project-title">Project Title Three</div>
+            <div class="project-desc">Extended description — challenges faced, your role, outcomes achieved.</div>
+            <div class="tech-tags" style="margin-bottom:1rem;">
+              <span class="tech-tag">React Native</span>
+              <span class="tech-tag">Firebase</span>
+            </div>
+            <a href="#" class="btn-secondary btn-sm" target="_blank">View Live</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Single certificate detail modal — content filled by openCertModal() -->
+  <div class="modal-backdrop" id="modal-cert-detail" onclick="closeModalOutside(event,'modal-cert-detail')">
+    <div class="modal-panel">
+      <button class="modal-close" onclick="closeModal('modal-cert-detail')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <img id="cert-modal-img" class="cert-modal-img" src="" alt="Certificate" />
+      <div id="cert-modal-title"
+        style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);margin-bottom:0.3rem;">
+      </div>
+      <div id="cert-modal-issuer"
+        style="font-size:0.7rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.4rem;">
+      </div>
+      <div id="cert-modal-date" style="font-size:0.78rem;color:var(--text3);margin-bottom:0.75rem;"></div>
+      <p id="cert-modal-desc" style="font-size:0.88rem;color:var(--text2);line-height:1.72;"></p>
+    </div>
+  </div>
+
+  <!-- All certificates modal -->
+  <div class="modal-backdrop" id="modal-certs" onclick="closeModalOutside(event,'modal-certs')">
+    <div class="modal-panel modal-panel-lg">
+      <button class="modal-close" onclick="closeModal('modal-certs')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="section-eyebrow"><span class="eyebrow-dash"></span>All</div>
+      <div class="modal-title">All Certificates</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="cert-card" onclick="openCertModal(0);closeModal('modal-certs');">
+          <div class="cert-img-wrap"><img src="assets/img/cert1.jpg" alt="Cert 1" loading="lazy"
+              onerror="this.parentElement.style.background='linear-gradient(135deg,#7a1e2e,#1a0a0d)'" /></div>
+          <div class="cert-body">
+            <h4>Certificate Title One</h4>
+            <div class="cert-issuer">Issuer Name</div>
+            <div class="cert-date">Month Year</div>
+          </div>
+        </div>
+        <div class="cert-card" onclick="openCertModal(1);closeModal('modal-certs');">
+          <div class="cert-img-wrap"><img src="assets/img/cert2.jpg" alt="Cert 2" loading="lazy"
+              onerror="this.parentElement.style.background='linear-gradient(135deg,#c9a84c,#2a1e00)'" /></div>
+          <div class="cert-body">
+            <h4>Certificate Title Two</h4>
+            <div class="cert-issuer">Issuer Name</div>
+            <div class="cert-date">Month Year</div>
+          </div>
+        </div>
+        <div class="cert-card" onclick="openCertModal(2);closeModal('modal-certs');">
+          <div class="cert-img-wrap"><img src="assets/img/cert3.jpg" alt="Cert 3" loading="lazy"
+              onerror="this.parentElement.style.background='linear-gradient(135deg,#e8829a,#3a0a14)'" /></div>
+          <div class="cert-body">
+            <h4>Certificate Title Three</h4>
+            <div class="cert-issuer">Issuer Name</div>
+            <div class="cert-date">Month Year</div>
+          </div>
+        </div>
+        <div class="cert-card" onclick="openCertModal(3);closeModal('modal-certs');">
+          <div class="cert-img-wrap"><img src="assets/img/cert4.jpg" alt="Cert 4" loading="lazy"
+              onerror="this.parentElement.style.background='linear-gradient(135deg,#b8293c,#0d0005)'" /></div>
+          <div class="cert-body">
+            <h4>Certificate Title Four</h4>
+            <div class="cert-issuer">Issuer Name</div>
+            <div class="cert-date">Month Year</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    /* ══════════════════════════════════════
+       CERTIFICATE DATA
+       Update these objects with your real
+       certificate information.
+    ══════════════════════════════════════ */
+    const certsData = [
+      {
+        img: 'assets/img/cert1.jpg',
+        title: 'Certificate Title One',
+        issuer: 'Issuer / Organization Name',
+        date: 'Month Year',
+        desc: 'Brief description of what this certificate covers, the skills it validates, and any notable details.'
+      },
+      {
+        img: 'assets/img/cert2.jpg',
+        title: 'Certificate Title Two',
+        issuer: 'Issuer / Organization Name',
+        date: 'Month Year',
+        desc: 'Brief description of what this certificate covers.'
+      },
+      {
+        img: 'assets/img/cert3.jpg',
+        title: 'Certificate Title Three',
+        issuer: 'Issuer / Organization Name',
+        date: 'Month Year',
+        desc: 'Brief description of what this certificate covers.'
+      },
+      {
+        img: 'assets/img/cert4.jpg',
+        title: 'Certificate Title Four',
+        issuer: 'Issuer / Organization Name',
+        date: 'Month Year',
+        desc: 'Brief description of what this certificate covers.'
+      },
+    ];
+
+    /* ══════════════════════════════════════
+       AOS (Animate On Scroll) INIT
+       duration: how long each animation takes (ms)
+       once: only animate once, not every time you scroll
+    ══════════════════════════════════════ */
+    AOS.init({ duration: 680, easing: 'ease-out-cubic', once: true, offset: 55 });
+
+    /* ══════════════════════════════════════
+       PAGE LOADER
+       Hides the loader after page is fully loaded
+       plus a small delay so the animation finishes.
+    ══════════════════════════════════════ */
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('page-loader').classList.add('hidden');
+      }, 1200);
+    });
+
+    /* ══════════════════════════════════════
+       THEME TOGGLE
+       Swaps data-theme attribute between
+       "dark" and "light" on <html>.
+    ══════════════════════════════════════ */
+    let isDark = true;
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      isDark = !isDark;
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      // Swap the icon shown in the button
+      document.getElementById('icon-sun').style.display = isDark ? 'block' : 'none';
+      document.getElementById('icon-moon').style.display = isDark ? 'none' : 'block';
+      showToast('Theme changed', isDark ? 'Switched to dark mode' : 'Switched to light mode');
+    });
+
+    /* ══════════════════════════════════════
+       NAVBAR SCROLL STATE
+       Adds .scrolled class when page is
+       scrolled past 50px — enables blur effect.
+    ══════════════════════════════════════ */
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    /* ══════════════════════════════════════
+       COUNTER ANIMATION
+       Counts up a number from 0 to `target`
+       over `duration` ms using requestAnimationFrame.
+       Used for hero stats (years, projects, certs).
+    ══════════════════════════════════════ */
+    function animateCount(el, target, suffix = '', duration = 1400) {
+      let startTime = null;
+      const step = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        // Ease out cubic for a natural deceleration
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target + suffix; // ensure exact final value
+      };
+      requestAnimationFrame(step);
+    }
+
+    /* Watch the stats container — start counters when it enters the viewport */
+    const statsEl = document.querySelector('.hero-stats');
+    if (statsEl) {
+      new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          animateCount(document.getElementById('stat-exp'), 2, '+');
+          animateCount(document.getElementById('stat-projects'), 20, '+');
+          animateCount(document.getElementById('stat-certs'), 10, '+');
+        }
+      }, { threshold: 0.5 }).observe(statsEl);
+    }
+
+    /* ══════════════════════════════════════
+       SKILLS TABS
+       Clicking a .skill-tab shows the matching
+       .skills-panel (panel-languages, panel-frameworks, etc.)
+       and hides the rest.
+    ══════════════════════════════════════ */
+    document.getElementById('skills-tabs').addEventListener('click', (e) => {
+      const tab = e.target.closest('.skill-tab');
+      if (!tab) return;
+
+      // Remove active from all tabs and panels
+      document.querySelectorAll('.skill-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.skills-panel').forEach(p => p.classList.remove('active'));
+
+      // Activate the clicked tab and its corresponding panel
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab)?.classList.add('active');
+    });
+
+    /* ══════════════════════════════════════
+       PROJECT FILTER
+       Clicking a .filter-btn filters the
+       project cards by their data-category attribute.
+       "all" shows every card.
+    ══════════════════════════════════════ */
+    document.getElementById('filter-bar').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cat = btn.dataset.category;
+      document.querySelectorAll('#projects-grid .project-card').forEach(card => {
+        const show = cat === 'all' || card.dataset.category === cat;
+        card.style.display = show ? '' : 'none';
+        if (show) card.style.animation = 'fadeUp 0.4s ease both';
+      });
+    });
+
+    /* ══════════════════════════════════════
+       MODAL SYSTEM
+       openModal(id)  — shows the modal with that id
+       closeModal(id) — hides it
+       closeModalOutside(e, id) — closes if user clicks
+         the backdrop (not the panel itself)
+    ══════════════════════════════════════ */
+    function openModal(id) {
+      document.getElementById(id).classList.add('show');
+      document.body.style.overflow = 'hidden'; // prevent background scroll
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOutside(e, id) {
+      // Only close if the click target is the backdrop itself (not a child)
+      if (e.target.id === id) closeModal(id);
+    }
+
+    // Also close any open modal when Escape is pressed
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-backdrop.show').forEach(m => {
+          m.classList.remove('show');
+          document.body.style.overflow = '';
+        });
+      }
+    });
+
+    /* ══════════════════════════════════════
+       CERTIFICATE MODAL
+       Populates the detail modal with data
+       from the certsData array, then opens it.
+    ══════════════════════════════════════ */
+    function openCertModal(index) {
+      const c = certsData[index];
+      if (!c) return;
+      document.getElementById('cert-modal-img').src = c.img;
+      document.getElementById('cert-modal-img').alt = c.title;
+      document.getElementById('cert-modal-title').textContent = c.title;
+      document.getElementById('cert-modal-issuer').textContent = c.issuer;
+      document.getElementById('cert-modal-date').textContent = c.date;
+      document.getElementById('cert-modal-desc').textContent = c.desc;
+      openModal('modal-cert-detail');
+    }
+
+    /* ══════════════════════════════════════
+       TOAST NOTIFICATIONS
+       Creates a self-dismissing toast element,
+       appends it to #toast-container, and removes
+       it after ~3.5 seconds.
+       icon: SVG element string
+       title: bold text
+       msg: smaller subtitle text
+    ══════════════════════════════════════ */
+    function showToast(title, msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.position = 'relative';
+      toast.innerHTML = `
+        <div class="toast-icon-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="toast-title">${title}</div>
+          <div class="toast-msg">${msg}</div>
+        </div>
+        <div class="toast-bar"></div>
+      `;
+      container.appendChild(toast);
+      // Force reflow so CSS transition kicks in
+      requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+      // Remove after 3.5s
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 450);
+      }, 3500);
+    }
+
+    /* ══════════════════════════════════════
+       GITHUB API
+       Fetches public data for guenzandra from
+       the GitHub REST API and populates:
+       - Repo count, follower count, star count
+       - The repos-grid with recent repositories
+    ══════════════════════════════════════ */
+    async function loadGitHub() {
+      try {
+        // Fetch user profile data
+        const userRes = await fetch('https://api.github.com/users/guenzandra');
+        const userData = await userRes.json();
+
+        if (userData.public_repos !== undefined) {
+          document.getElementById('gh-repos').textContent = userData.public_repos;
+          document.getElementById('gh-followers').textContent = userData.followers;
+        }
+
+        // Fetch repos sorted by most recently updated, limit 6
+        const reposRes = await fetch('https://api.github.com/users/guenzandra/repos?sort=updated&per_page=6');
+        const repos = await reposRes.json();
+
+        if (Array.isArray(repos) && repos.length) {
+          // Map language names to their official brand hex colors
+          const langColors = {
+            JavaScript: '#F7DF1E',
+            PHP: '#4F5D95',
+            Python: '#3776AB',
+            TypeScript: '#3178C6',
+            HTML: '#E34F26',
+            CSS: '#1572B6',
+            default: '#666'
+          };
+
+          // Count total stars across all fetched repos
+          let totalStars = 0;
+          repos.forEach(r => { totalStars += r.stargazers_count || 0; });
+          document.getElementById('gh-stars').textContent = totalStars;
+
+          // Build repo cards and inject into the grid
+          document.getElementById('repos-grid').innerHTML = repos.map(r => `
+            <a href="${r.html_url}" target="_blank" rel="noopener" class="repo-card">
+              <div class="repo-name">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+                ${r.name}
+              </div>
+              <div class="repo-desc">${r.description || 'No description provided.'}</div>
+              <div class="repo-meta">
+                ${r.language ? `
+                  <div class="repo-lang">
+                    <span class="lang-dot" style="background:${langColors[r.language] || langColors.default}"></span>
+                    ${r.language}
+                  </div>` : ''}
+                <div class="repo-stars">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  ${r.stargazers_count}
+                </div>
+              </div>
+            </a>
+          `).join('');
+        }
+      } catch (err) {
+        // Silent fail — GitHub API might be rate-limited
+        console.log('GitHub API error:', err);
+      }
+    }
+
+    loadGitHub();
+
+    /* ══════════════════════════════════════
+       RESPONSIVE EXP GRID
+       Collapses the 3-column experience grid
+       to single column on mobile.
+    ══════════════════════════════════════ */
+    function updateExpGrid() {
+      const g = document.querySelector('.exp-grid');
+      if (g) g.style.gridTemplateColumns = window.innerWidth < 768 ? '1fr' : 'repeat(3, 1fr)';
+    }
+
+    window.addEventListener('resize', updateExpGrid);
+    updateExpGrid(); // run once on load
+
+    /* ══════════════════════════════════════
+       WELCOME TOAST
+       Shown once after the loader hides.
+    ══════════════════════════════════════ */
+    setTimeout(() => {
+      showToast('Welcome', 'Thanks for visiting my portfolio.');
+    }, 1900);
+
+    /* Email click feedback toast */
+    document.querySelector('a[href^="mailto"]')?.addEventListener('click', () => {
+      showToast('Email', 'Opening your email client...');
+    });
+  </script>
+
+</body>
+
+</html>

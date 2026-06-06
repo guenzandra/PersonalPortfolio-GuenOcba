@@ -1,0 +1,18 @@
+:root {
+    --bg-color: #b0b0b0;
+    --shadow:rgb(129, 126, 126)0;
+    --font-color1: #676201;
+    --font-color2: #000000;
+}
+
+.body{
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+}
