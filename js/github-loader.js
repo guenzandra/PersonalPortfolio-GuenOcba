@@ -1,3 +1,4 @@
+//js/github-loader.js
 // GitHub Loader - Fetches and displays GitHub data
 async function loadGitHub() {
     try {

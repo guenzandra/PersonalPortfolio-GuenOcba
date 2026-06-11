@@ -1,3 +1,4 @@
+//js/certificate-controller.js
 // Certificate Controller - Manages certificate data and modals
 const certsData = [
     {

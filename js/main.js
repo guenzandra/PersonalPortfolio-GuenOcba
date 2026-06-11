@@ -1,3 +1,4 @@
+//js/main.js
 // Main - Initializes all components and handles page loader
 (function() {
     // Initialize AOS
